@@ -1,4 +1,7 @@
 #pragma once
+
+enum WAVE_SHAPE {sine, triangle, saw, square};
+
 class Oscillator
 {
 public:
@@ -10,6 +13,7 @@ public:
 
 
 private:
+	WAVE_SHAPE waveShape;
 	double pi;
 	double phase;
 	double phaseDelta;

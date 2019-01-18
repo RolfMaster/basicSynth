@@ -13,6 +13,7 @@ public:
   void Reset();
   void OnParamChange(int paramIdx);
   void ProcessDoubleReplacing(double** inputs, double** outputs, int nFrames);
+  void ProcessMidiMsg(IMidiMsg* midiMsg) override;
 
 private:
   double mFrequency;

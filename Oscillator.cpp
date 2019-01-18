@@ -77,6 +77,11 @@ void Oscillator::setSamplingRate(double samplinRate)
 	updatePhaseDelta();
 }
 
+void Oscillator::setWaveShape(WAVE_SHAPE shape)
+{
+	waveShape = shape;
+}
+
 void Oscillator::updatePhaseDelta()
 {
 	phaseDelta = 2 * pi * frequency / samplingRate;

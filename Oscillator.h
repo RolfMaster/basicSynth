@@ -10,6 +10,7 @@ public:
 	void generate(double* buffer, int nFrames);
 	void setFrequency(double frequency);
 	void setSamplingRate(double samplinRate);
+	void setWaveShape(WAVE_SHAPE shape);
 
 
 private:

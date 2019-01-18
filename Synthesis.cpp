@@ -2,6 +2,7 @@
 #include "IPlug_include_in_plug_src.h"
 #include "IControl.h"
 #include "resource.h"
+#include <iostream>
 
 const int kNumPrograms = 1;
 
@@ -56,6 +57,11 @@ void Synthesis::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 	for (int i = 0; i < nFrames; ++i) {
 		outR[i] = outL[i];
 	}
+}
+
+void Synthesis::ProcessMidiMsg(IMidiMsg* midiMsg)
+{
+	osc.setWaveShape(sine);
 }
 
 void Synthesis::Reset()

@@ -3,6 +3,7 @@
 
 #include "IPlug_include_in_plug_hdr.h"
 #include "Oscillator.h"
+#include "MidiQ.h"
 
 class Synthesis : public IPlug
 {
@@ -18,6 +19,7 @@ public:
 private:
   double mFrequency;
   Oscillator osc;
+  MidiQ midiQ;
 };
 
 #endif

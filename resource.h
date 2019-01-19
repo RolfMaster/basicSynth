@@ -72,8 +72,8 @@ instrument determined by PLUG _IS _INST
 #endif
 
 // vst3 stuff
-#define MFR_URL "www.olilarkin.co.uk"
-#define MFR_EMAIL "spam@me.com"
+#define MFR_URL "www.whitehouse.gov"
+#define MFR_EMAIL "lovro.boban@hotmail.com"
 #define EFFECT_TYPE_VST3 "Instrument|Synth"
 
 /* "Fx|Analyzer"", "Fx|Delay", "Fx|Distortion", "Fx|Dynamics", "Fx|EQ", "Fx|Filter",

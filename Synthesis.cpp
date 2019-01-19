@@ -53,15 +53,21 @@ void Synthesis::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 	double* outL = outputs[0];
 	double* outR = outputs[1];
 
-	osc.generate(outL, nFrames);
-	for (int i = 0; i < nFrames; ++i) {
-		outR[i] = outL[i];
+	for (int i = 0; i < nFrames; ++i){
+		midiQ.setOscillatorParams(&osc, i);
+		outR[i] = outL[i] = osc.generate();
 	}
+	midiQ.Flush(nFrames);
+
+	
 }
 
 void Synthesis::ProcessMidiMsg(IMidiMsg* midiMsg)
 {
-	osc.setWaveShape(sine);
+	IMidiMsg::EStatusMsg status = midiMsg->StatusMsg();
+	if (status == IMidiMsg::kNoteOn || status == IMidiMsg::kNoteOff) {
+		midiQ.Add(midiMsg);
+	}
 }
 
 void Synthesis::Reset()
@@ -69,6 +75,7 @@ void Synthesis::Reset()
   TRACE;
   IMutexLock lock(this);
   osc.setSamplingRate(GetSampleRate());
+  midiQ.Resize(GetBlockSize());
 }
 
 void Synthesis::OnParamChange(int paramIdx)

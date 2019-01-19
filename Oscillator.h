@@ -7,19 +7,22 @@ class Oscillator
 public:
 	Oscillator();
 	~Oscillator();
-	void generate(double* buffer, int nFrames);
+	double generate();
 	void setFrequency(double frequency);
 	void setSamplingRate(double samplinRate);
 	void setWaveShape(WAVE_SHAPE shape);
-
+	bool isMuted = true;
+	void setVelocity(double velocity);
 
 private:
 	WAVE_SHAPE waveShape;
-	double pi;
+	double twoPi;
 	double phase;
 	double phaseDelta;
 	double samplingRate;
 	double frequency;
 	void updatePhaseDelta();
+	double velocity;
+	
 };
 

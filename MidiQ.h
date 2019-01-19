@@ -5,6 +5,7 @@
 #pragma clang diagnostic pop
 
 #include "IMidiQueue.h"
+#include "Oscillator.h"
 
 class MidiQ
 {
@@ -12,10 +13,13 @@ public:
 	MidiQ();
 	~MidiQ();
 
-	void processMidiMsg(IMidiMsg* midiMsg);
 	int Resize(int size);
+	void Add(IMidiMsg* midiMsg);
+	void Flush(int nFrames);
+	void setOscillatorParams(Oscillator* osc, int offset);
 
 private:
-	IMidiQueue midiQ;
+	IMidiQueue iMidiQ;
+	int lastNotePlayed;
 };
 

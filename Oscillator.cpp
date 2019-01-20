@@ -10,7 +10,7 @@ Oscillator::Oscillator()
 	frequency = 440.0;
 	samplingRate = 44100.0;
 	updatePhaseDelta();
-	waveShape = triangle;
+	waveShape = square;
 }
 
 
@@ -38,7 +38,7 @@ double Oscillator::generate()
 		phase += phaseDelta;
 		break;
 	case(square):
-		result = (phase > 0) ? 1.0 : -1.0;
+		result = (phase > (twoPi/2)) ? 1.0 : -1.0;
 		phase += phaseDelta;
 		break;
 	}
@@ -47,7 +47,7 @@ double Oscillator::generate()
 		phase -= twoPi;
 	}
 
-	result *= velocity;
+	//result *= velocity;
 	result *= envelope.generateEnvelopeValue();
 	
 	return result;

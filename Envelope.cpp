@@ -4,10 +4,10 @@
 
 Envelope::Envelope()
 {
-	Envelope::attack = 200.0;
-	Envelope::decay = 12000.0;
-	Envelope::sustain = 0.0;
-	Envelope::release = 0.0;
+	Envelope::attack = 20000.0;
+	Envelope::decay = 5000.0;
+	Envelope::sustain = 0.8;
+	Envelope::release = 10000.0;
 
 	currentStage = ATTACK;
 }

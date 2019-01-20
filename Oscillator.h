@@ -1,4 +1,5 @@
 #pragma once
+#include "Envelope.h"
 
 enum WAVE_SHAPE {sine, triangle, saw, square};
 
@@ -13,6 +14,7 @@ public:
 	void setWaveShape(WAVE_SHAPE shape);
 	bool isMuted = true;
 	void setVelocity(double velocity);
+	void noteEvent(IMidiMsg::EStatusMsg status);
 
 private:
 	WAVE_SHAPE waveShape;
@@ -23,6 +25,6 @@ private:
 	double frequency;
 	void updatePhaseDelta();
 	double velocity;
-	
+	Envelope envelope;
 };
 

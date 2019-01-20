@@ -10,7 +10,7 @@ Oscillator::Oscillator()
 	frequency = 440.0;
 	samplingRate = 44100.0;
 	updatePhaseDelta();
-	waveShape = sine;
+	waveShape = triangle;
 }
 
 
@@ -48,6 +48,7 @@ double Oscillator::generate()
 	}
 
 	result *= velocity;
+	result *= envelope.generateEnvelopeValue();
 	
 	return result;
 }
@@ -73,6 +74,8 @@ void Oscillator::setVelocity(double vel)
 {
 	velocity = vel;
 }
+
+void Oscillator::noteEvent(IMidiMsg::EStatusMsg status){ envelope.noteEvent(status); }
 
 void Oscillator::updatePhaseDelta()
 {

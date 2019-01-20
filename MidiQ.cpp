@@ -34,6 +34,8 @@ void MidiQ::setOscillatorParams(Oscillator* osc, int offset)
 		if (midiMsg->mOffset > offset) break;
 
 		IMidiMsg::EStatusMsg status = midiMsg->StatusMsg();
+		osc->noteEvent(status);
+
 		if (status == IMidiMsg::kNoteOn) {
 			osc->isMuted = false;
 			osc->setFrequency(440 * std::pow(2.0, ((midiMsg->NoteNumber() - 69) / 12.0)));
@@ -43,11 +45,13 @@ void MidiQ::setOscillatorParams(Oscillator* osc, int offset)
 
 			lastNotePlayed = midiMsg->NoteNumber();
 		}
+		/*
 		else if (status == IMidiMsg::kNoteOff) {
 			if (midiMsg->NoteNumber() == lastNotePlayed) {
 				osc->isMuted = true;
 			}
 		}
+		*/
 		iMidiQ.Remove();
 	}
 }

@@ -18,7 +18,7 @@ public:
 	void setEnvelopeParams(STAGE stage, double value);
 
 private:
-	WAVE_SHAPE waveShape;
+	static WAVE_SHAPE waveShape;
 	double twoPi;
 	double phase;
 	double phaseDelta;

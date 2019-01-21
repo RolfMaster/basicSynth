@@ -35,11 +35,11 @@ Synthesis::Synthesis(IPlugInstanceInfo instanceInfo)
   
   
   GetParam(kAttack)->InitDouble("Attack", 0., 0., 4.0, 0.01, "Hz");
-  GetParam(kAttack)->SetShape(3.);
+  GetParam(kAttack)->SetShape(2.);
   pGraphics->AttachControl(new IKnobRotaterControl(this, 100, 100, kAttack, &knobBitmap));
 
   GetParam(kDecay)->InitDouble("Decay", 0., 0., 4.0, 0.01, "Hz");
-  GetParam(kDecay)->SetShape(3.);
+  GetParam(kDecay)->SetShape(2.);
   pGraphics->AttachControl(new IKnobRotaterControl(this, 200, 100, kDecay, &knobBitmap));
 
   GetParam(kSustain)->InitDouble("Sustain", 1., 0., 1., 0.01, "Hz");
@@ -47,7 +47,7 @@ Synthesis::Synthesis(IPlugInstanceInfo instanceInfo)
   pGraphics->AttachControl(new IKnobRotaterControl(this, 300, 100, kSustain, &knobBitmap));
 
   GetParam(kRelease)->InitDouble("Release", 0., 0., 4.0, 0.01, "Hz");
-  GetParam(kRelease)->SetShape(3.);
+  GetParam(kRelease)->SetShape(2.);
   pGraphics->AttachControl(new IKnobRotaterControl(this, 400, 100, kRelease, &knobBitmap));
 
   pGraphics->AttachBackground(BACKGROUND_ID, BACKGROUND_FN);

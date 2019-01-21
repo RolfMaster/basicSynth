@@ -8,6 +8,7 @@ Envelope::Envelope()
 	Envelope::decay = 5000.0;
 	Envelope::sustain = 0.8;
 	Envelope::release = 10000.0;
+	Envelope::legato = true;
 
 	currentStage = ATTACK;
 }
@@ -21,12 +22,18 @@ double Envelope::attack;
 double Envelope::decay;
 double Envelope::sustain;
 double Envelope::release;
+bool Envelope::legato;
 
 
 void Envelope::setAttack(double att){attack = att;}
 void Envelope::setDecay(double dec){decay = dec;}
 void Envelope::setSustain(double sus){sustain = sus;}
 void Envelope::setRelease(double rel){release = rel;}
+
+void Envelope::setLegato(bool b)
+{
+	legato = b;
+}
 
 void Envelope::setCurrentStage(STAGE stage)
 {
@@ -36,8 +43,12 @@ void Envelope::setCurrentStage(STAGE stage)
 
 void Envelope::noteEvent(IMidiMsg::EStatusMsg statusMsg){
 	if (statusMsg == IMidiMsg::kNoteOn) {
+		if (legato)
+			position = generateEnvelopeValue()*attack;
+		else
+			position = 0.0;
+
 		setCurrentStage(STAGE::ATTACK);
-		position = 0;
 	}
 	else if (statusMsg == IMidiMsg::kNoteOff) {
 		switch (currentStage) {
@@ -93,6 +104,7 @@ double Envelope::generateEnvelopeValue()
 		break;
 	case(DONE):
 		res = 0.0;
+		position = 0.0;
 		break;
 	}
 	return res;

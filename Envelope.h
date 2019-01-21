@@ -13,6 +13,7 @@ public:
 	static void setDecay(double);
 	static void setSustain(double);
 	static void setRelease(double);
+	static void setLegato(bool);
 
 	void setCurrentStage(STAGE);
 
@@ -25,6 +26,7 @@ private:
 	static double decay;
 	static double sustain;
 	static double release;
+	static bool legato;
 
 	STAGE currentStage;
 	void nextStage();

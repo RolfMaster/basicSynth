@@ -1,7 +1,7 @@
 #include "Oscillator.h"
 #include <math.h>
 
-
+WAVE_SHAPE Oscillator::waveShape;
 
 Oscillator::Oscillator()
 {
@@ -10,7 +10,7 @@ Oscillator::Oscillator()
 	frequency = 440.0;
 	samplingRate = 44100.0;
 	updatePhaseDelta();
-	waveShape = sine;
+	waveShape = square;
 }
 
 

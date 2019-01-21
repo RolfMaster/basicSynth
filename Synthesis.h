@@ -4,6 +4,7 @@
 #include "IPlug_include_in_plug_hdr.h"
 #include "Oscillator.h"
 #include "MidiQ.h"
+#include <set>
 
 class Synthesis : public IPlug
 {
@@ -18,8 +19,8 @@ public:
 
 private:
   double mFrequency;
-  Oscillator osc;
   MidiQ midiQ;
+  Oscillator voices[128];
 };
 
 #endif

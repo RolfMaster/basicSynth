@@ -16,6 +16,7 @@ public:
 	static void setLegato(bool);
 
 	void setCurrentStage(STAGE);
+	STAGE getCurrentStage();
 
 	void noteEvent(IMidiMsg::EStatusMsg statusMsg);
 

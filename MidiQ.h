@@ -16,10 +16,9 @@ public:
 	int Resize(int size);
 	void Add(IMidiMsg* midiMsg);
 	void Flush(int nFrames);
-	void setOscillatorParams(Oscillator* osc, int offset);
+	void setOscillatorParams(Oscillator osc[], int offset);
 
 private:
 	IMidiQueue iMidiQ;
-	int lastNotePlayed;
 };
 

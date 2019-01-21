@@ -10,22 +10,23 @@ public:
 	~Oscillator();
 	double generate();
 	void setFrequency(double frequency);
-	void setSamplingRate(double samplinRate);
-	void setWaveShape(WAVE_SHAPE shape);
+	static void setSamplingRate(double samplinRate);
+	static void setWaveShape(WAVE_SHAPE shape);
 	bool isMuted = true;
-	void setVelocity(double velocity);
+	static void setVelocity(double velocity);
 	void noteEvent(IMidiMsg::EStatusMsg status);
-	void setEnvelopeParams(STAGE stage, double value);
+	static void setEnvelopeParams(STAGE stage, double value);
+	void updatePhaseDelta();
+	void setMuted(bool);
 
 private:
 	static WAVE_SHAPE waveShape;
 	double twoPi;
 	double phase;
 	double phaseDelta;
-	double samplingRate;
+	static double samplingRate;
 	double frequency;
-	void updatePhaseDelta();
-	double velocity;
+	static double velocity;
 	Envelope envelope;
 };
 

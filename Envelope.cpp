@@ -10,7 +10,7 @@ Envelope::Envelope()
 	Envelope::release = 10000.0;
 	Envelope::legato = true;
 
-	currentStage = ATTACK;
+	currentStage = DONE;
 }
 
 
@@ -29,17 +29,15 @@ void Envelope::setAttack(double att){attack = att;}
 void Envelope::setDecay(double dec){decay = dec;}
 void Envelope::setSustain(double sus){sustain = sus;}
 void Envelope::setRelease(double rel){release = rel;}
-
-void Envelope::setLegato(bool b)
-{
-	legato = b;
-}
+void Envelope::setLegato(bool b){legato = b;}
 
 void Envelope::setCurrentStage(STAGE stage)
 {
 	STAGE a = stage;
 	currentStage = stage;
 }
+
+STAGE Envelope::getCurrentStage() {return currentStage;}
 
 void Envelope::noteEvent(IMidiMsg::EStatusMsg statusMsg){
 	if (statusMsg == IMidiMsg::kNoteOn) {

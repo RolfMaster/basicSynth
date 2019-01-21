@@ -2,6 +2,8 @@
 #include <math.h>
 
 WAVE_SHAPE Oscillator::waveShape;
+double Oscillator::velocity;
+double Oscillator::samplingRate;
 
 Oscillator::Oscillator()
 {
@@ -10,7 +12,8 @@ Oscillator::Oscillator()
 	frequency = 440.0;
 	samplingRate = 44100.0;
 	updatePhaseDelta();
-	waveShape = square;
+	isMuted = true;
+	waveShape = sine;
 }
 
 
@@ -20,9 +23,11 @@ Oscillator::~Oscillator()
 
 double Oscillator::generate()
 {
+	isMuted = (envelope.getCurrentStage() == STAGE::DONE);
 	if (isMuted) return 0.0;
+	
 
-	double result;
+	double result = 0.0;
 
 	switch (waveShape) {
 	case(sine):
@@ -59,31 +64,21 @@ void Oscillator::setFrequency(double freq)
 	updatePhaseDelta();
 }
 
-void Oscillator::setSamplingRate(double samplinRate)
-{
-	samplingRate = samplinRate;
-	updatePhaseDelta();
-}
+void Oscillator::setSamplingRate(double samplinRate) { samplingRate = samplinRate; }
 
-void Oscillator::setWaveShape(WAVE_SHAPE shape)
-{
-	waveShape = shape;
-}
+void Oscillator::setWaveShape(WAVE_SHAPE shape) { waveShape = shape; }
 
-void Oscillator::setVelocity(double vel)
-{
-	velocity = vel;
-}
+void Oscillator::setVelocity(double vel) { velocity = vel; }
 
 void Oscillator::noteEvent(IMidiMsg::EStatusMsg status){ envelope.noteEvent(status); }
 
 void Oscillator::setEnvelopeParams(STAGE stage, double value)
 {
 	switch (stage) {
-	case(ATTACK): envelope.setAttack(value*samplingRate); break;
-	case(DECAY): envelope.setDecay(value*samplingRate); break;
-	case(SUSTAIN): envelope.setSustain(value); break;
-	case(RELEASE): envelope.setRelease(value*samplingRate); break;
+		case(ATTACK): Envelope::setAttack(value*samplingRate); break;
+		case(DECAY): Envelope::setDecay(value*samplingRate); break;
+		case(SUSTAIN): Envelope::setSustain(value); break;
+		case(RELEASE): Envelope::setRelease(value*samplingRate); break;
 	}
 }
 
@@ -91,3 +86,5 @@ void Oscillator::updatePhaseDelta()
 {
 	phaseDelta = twoPi * frequency / samplingRate;
 }
+
+void Oscillator::setMuted(bool b) { isMuted = b; }

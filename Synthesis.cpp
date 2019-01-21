@@ -34,19 +34,19 @@ Synthesis::Synthesis(IPlugInstanceInfo instanceInfo)
   IBitmap knobBitmap = pGraphics->LoadIBitmap(KNOB_ID, KNOB_FN, 1);
   
   
-  GetParam(kAttack)->InitDouble("Attack", 0., 0., 4.0, 0.01, "Hz");
+  GetParam(kAttack)->InitDouble("Attack", 0., 0., 4.0, 0.01, "sec");
   GetParam(kAttack)->SetShape(2.);
   pGraphics->AttachControl(new IKnobRotaterControl(this, 100, 100, kAttack, &knobBitmap));
 
-  GetParam(kDecay)->InitDouble("Decay", 0., 0., 4.0, 0.01, "Hz");
+  GetParam(kDecay)->InitDouble("Decay", 0., 0., 4.0, 0.01, "sec");
   GetParam(kDecay)->SetShape(2.);
   pGraphics->AttachControl(new IKnobRotaterControl(this, 200, 100, kDecay, &knobBitmap));
 
-  GetParam(kSustain)->InitDouble("Sustain", 1., 0., 1., 0.01, "Hz");
-  GetParam(kSustain)->SetShape(2.);
+  GetParam(kSustain)->InitDouble("Sustain", 1., 0., 1., 0.01);
+  GetParam(kSustain)->SetShape(1.);
   pGraphics->AttachControl(new IKnobRotaterControl(this, 300, 100, kSustain, &knobBitmap));
 
-  GetParam(kRelease)->InitDouble("Release", 0., 0., 4.0, 0.01, "Hz");
+  GetParam(kRelease)->InitDouble("Release", 0., 0., 4.0, 0.01, "sec");
   GetParam(kRelease)->SetShape(2.);
   pGraphics->AttachControl(new IKnobRotaterControl(this, 400, 100, kRelease, &knobBitmap));
 
@@ -71,9 +71,15 @@ void Synthesis::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 	double* outL = outputs[0];
 	double* outR = outputs[1];
 
+	double attenuation = 0.25118864315; //required to get -12dB on one oscillator
+
 	for (int i = 0; i < nFrames; ++i){
-		midiQ.setOscillatorParams(&osc, i);
-		outR[i] = outL[i] = osc.generate();
+		midiQ.setOscillatorParams(voices, i);
+		outL[i] = outR[i] = 0.0;
+		for (Oscillator &osc : voices) {
+			outL[i] += osc.generate()*attenuation;
+			outR[i] = outL[i];
+		}
 	}
 	midiQ.Flush(nFrames);
 
@@ -92,7 +98,11 @@ void Synthesis::Reset()
 {
   TRACE;
   IMutexLock lock(this);
-  osc.setSamplingRate(GetSampleRate());
+
+  Oscillator::setSamplingRate(GetSampleRate());
+  for (auto &osc : voices) {
+	  osc.updatePhaseDelta();
+  }
   midiQ.Resize(GetBlockSize());
 }
 
@@ -102,16 +112,16 @@ void Synthesis::OnParamChange(int paramIdx)
 
 	switch (paramIdx){
 		case (kAttack):
-			osc.setEnvelopeParams(ATTACK, GetParam(paramIdx)->Value());
+			Oscillator::setEnvelopeParams(ATTACK, GetParam(paramIdx)->Value());
 			break;
 		case (kDecay):
-			osc.setEnvelopeParams(DECAY, GetParam(paramIdx)->Value());
+			Oscillator::setEnvelopeParams(DECAY, GetParam(paramIdx)->Value());
 			break;
 		case (kSustain):
-			osc.setEnvelopeParams(SUSTAIN, GetParam(paramIdx)->Value());
+			Oscillator::setEnvelopeParams(SUSTAIN, GetParam(paramIdx)->Value());
 			break;
 		case (kRelease):
-			osc.setEnvelopeParams(RELEASE, GetParam(paramIdx)->Value());
+			Oscillator::setEnvelopeParams(RELEASE, GetParam(paramIdx)->Value());
 			break;
 		default:
 			break;

@@ -8,7 +8,10 @@ const int kNumPrograms = 1;
 
 enum EParams
 {
-  kFrequency = 0,
+  kAttack = 0,
+  kDecay,
+  kSustain,
+  kRelease,
   kNumParams
 };
 
@@ -27,16 +30,31 @@ Synthesis::Synthesis(IPlugInstanceInfo instanceInfo)
 {
   TRACE;
 
-  //arguments are: name, defaultVal, minVal, maxVal, step, label
-  GetParam(kFrequency)->InitDouble("Frequency", 440., 20., 10000.0, 0.01, "Hz");
-  GetParam(kFrequency)->SetShape(2.);
-
   IGraphics* pGraphics = MakeGraphics(this, kWidth, kHeight);
-  pGraphics->AttachPanelBackground(&COLOR_RED);
+  IBitmap knobBitmap = pGraphics->LoadIBitmap(KNOB_ID, KNOB_FN, 1);
+  
+  
+  GetParam(kAttack)->InitDouble("Attack", 0., 0., 4.0, 0.01, "Hz");
+  GetParam(kAttack)->SetShape(3.);
+  pGraphics->AttachControl(new IKnobRotaterControl(this, 100, 100, kAttack, &knobBitmap));
 
-  IBitmap knob = pGraphics->LoadIBitmap(KNOB_ID, KNOB_FN, kKnobFrames);
+  GetParam(kDecay)->InitDouble("Decay", 0., 0., 4.0, 0.01, "Hz");
+  GetParam(kDecay)->SetShape(3.);
+  pGraphics->AttachControl(new IKnobRotaterControl(this, 200, 100, kDecay, &knobBitmap));
 
-  pGraphics->AttachControl(new IKnobMultiControl(this, kFrequencyX, kFrequencyY, kFrequency, &knob));
+  GetParam(kSustain)->InitDouble("Sustain", 1., 0., 1., 0.01, "Hz");
+  GetParam(kSustain)->SetShape(2.);
+  pGraphics->AttachControl(new IKnobRotaterControl(this, 300, 100, kSustain, &knobBitmap));
+
+  GetParam(kRelease)->InitDouble("Release", 0., 0., 4.0, 0.01, "Hz");
+  GetParam(kRelease)->SetShape(3.);
+  pGraphics->AttachControl(new IKnobRotaterControl(this, 400, 100, kRelease, &knobBitmap));
+
+  pGraphics->AttachBackground(BACKGROUND_ID, BACKGROUND_FN);
+
+  
+
+  
 
   AttachGraphics(pGraphics);
 
@@ -80,15 +98,22 @@ void Synthesis::Reset()
 
 void Synthesis::OnParamChange(int paramIdx)
 {
-  IMutexLock lock(this);
+	IMutexLock lock(this);
 
-  switch (paramIdx)
-  {
-    case kFrequency:
-      osc.setFrequency(GetParam(kFrequency)->Value());
-      break;
-
-    default:
-      break;
-  }
+	switch (paramIdx){
+		case (kAttack):
+			osc.setEnvelopeParams(ATTACK, GetParam(paramIdx)->Value());
+			break;
+		case (kDecay):
+			osc.setEnvelopeParams(DECAY, GetParam(paramIdx)->Value());
+			break;
+		case (kSustain):
+			osc.setEnvelopeParams(SUSTAIN, GetParam(paramIdx)->Value());
+			break;
+		case (kRelease):
+			osc.setEnvelopeParams(RELEASE, GetParam(paramIdx)->Value());
+			break;
+		default:
+			break;
+  }	
 }

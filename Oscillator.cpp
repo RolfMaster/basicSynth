@@ -10,7 +10,7 @@ Oscillator::Oscillator()
 	frequency = 440.0;
 	samplingRate = 44100.0;
 	updatePhaseDelta();
-	waveShape = square;
+	waveShape = sine;
 }
 
 
@@ -47,7 +47,7 @@ double Oscillator::generate()
 		phase -= twoPi;
 	}
 
-	//result *= velocity;
+	result *= velocity;
 	result *= envelope.generateEnvelopeValue();
 	
 	return result;
@@ -76,6 +76,16 @@ void Oscillator::setVelocity(double vel)
 }
 
 void Oscillator::noteEvent(IMidiMsg::EStatusMsg status){ envelope.noteEvent(status); }
+
+void Oscillator::setEnvelopeParams(STAGE stage, double value)
+{
+	switch (stage) {
+	case(ATTACK): envelope.setAttack(value*samplingRate); break;
+	case(DECAY): envelope.setDecay(value*samplingRate); break;
+	case(SUSTAIN): envelope.setSustain(value); break;
+	case(RELEASE): envelope.setRelease(value*samplingRate); break;
+	}
+}
 
 void Oscillator::updatePhaseDelta()
 {

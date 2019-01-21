@@ -15,6 +15,7 @@ public:
 	bool isMuted = true;
 	void setVelocity(double velocity);
 	void noteEvent(IMidiMsg::EStatusMsg status);
+	void setEnvelopeParams(STAGE stage, double value);
 
 private:
 	WAVE_SHAPE waveShape;

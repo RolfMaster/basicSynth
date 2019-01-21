@@ -18,6 +18,7 @@
 build-*
 ipch/*
 gui/*
+resources/img/*
 
 Icon?
 .DS_Stor*

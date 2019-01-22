@@ -1,7 +1,7 @@
 #pragma once
 #include "Envelope.h"
 
-enum WAVE_SHAPE {sine, triangle, saw, square};
+enum WAVE_SHAPE {sine, triangle, saw, square, numEnums};
 
 class Oscillator
 {
@@ -18,6 +18,7 @@ public:
 	static void setEnvelopeParams(STAGE stage, double value);
 	void updatePhaseDelta();
 	void setMuted(bool);
+	int currentNote;
 
 private:
 	static WAVE_SHAPE waveShape;
@@ -28,5 +29,6 @@ private:
 	double frequency;
 	static double velocity;
 	Envelope envelope;
+	
 };
 

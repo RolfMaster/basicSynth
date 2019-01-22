@@ -6,6 +6,7 @@
 
 #include "IMidiQueue.h"
 #include "Oscillator.h"
+#include <unordered_set>
 
 class MidiQ
 {

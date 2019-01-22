@@ -23,7 +23,7 @@ Oscillator::~Oscillator()
 
 double Oscillator::generate()
 {
-	isMuted = (envelope.getCurrentStage() == STAGE::DONE);
+	isMuted = (envelope.currentStage == STAGE::DONE);
 	if (isMuted) return 0.0;
 	
 
@@ -88,3 +88,4 @@ void Oscillator::updatePhaseDelta()
 }
 
 void Oscillator::setMuted(bool b) { isMuted = b; }
+

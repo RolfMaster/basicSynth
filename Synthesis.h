@@ -4,7 +4,7 @@
 #include "IPlug_include_in_plug_hdr.h"
 #include "Oscillator.h"
 #include "MidiQ.h"
-#include <set>
+#include <unordered_set>
 
 class Synthesis : public IPlug
 {
@@ -20,7 +20,9 @@ public:
 private:
   double mFrequency;
   MidiQ midiQ;
+  std::unordered_set<int> activeVoices;
   Oscillator voices[128];
+  const double attenuationFactor = std::pow(10.0, -0.6); //required to get a single oscillator to -12dB
 };
 
 #endif

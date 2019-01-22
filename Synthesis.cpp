@@ -8,11 +8,12 @@ const int kNumPrograms = 1;
 
 enum EParams
 {
-  kAttack = 0,
-  kDecay,
-  kSustain,
-  kRelease,
-  kNumParams
+	kWaveform = 0,
+	kAttack,
+	kDecay,
+	kSustain,
+	kRelease,
+	kNumParams
 };
 
 enum ELayout
@@ -31,21 +32,30 @@ Synthesis::Synthesis(IPlugInstanceInfo instanceInfo)
   TRACE;
 
   IGraphics* pGraphics = MakeGraphics(this, kWidth, kHeight);
+
   IBitmap knobBitmap = pGraphics->LoadIBitmap(KNOB_ID, KNOB_FN, 1);
-  
-  
+  IBitmap waveformBitmap = pGraphics->LoadIBitmap(WAVEFORM_ID, WAVEFORM_FN, 4);
+
+  GetParam(kWaveform)->InitEnum("Waveform", sine, numEnums);
+  //GetParam(kWaveform)->SetDisplayText(0, "Sine"); // Needed for VST3
+  pGraphics->AttachControl(new ISwitchControl(this, 10, 53, kWaveform, &waveformBitmap));
+
+  //attack knob
   GetParam(kAttack)->InitDouble("Attack", 0., 0., 4.0, 0.01, "sec");
   GetParam(kAttack)->SetShape(2.);
   pGraphics->AttachControl(new IKnobRotaterControl(this, 100, 100, kAttack, &knobBitmap));
 
+  //decay knob
   GetParam(kDecay)->InitDouble("Decay", 0., 0., 4.0, 0.01, "sec");
   GetParam(kDecay)->SetShape(2.);
   pGraphics->AttachControl(new IKnobRotaterControl(this, 200, 100, kDecay, &knobBitmap));
 
+  //sustain knob
   GetParam(kSustain)->InitDouble("Sustain", 1., 0., 1., 0.01);
   GetParam(kSustain)->SetShape(1.);
   pGraphics->AttachControl(new IKnobRotaterControl(this, 300, 100, kSustain, &knobBitmap));
 
+  //release knob
   GetParam(kRelease)->InitDouble("Release", 0., 0., 4.0, 0.01, "sec");
   GetParam(kRelease)->SetShape(2.);
   pGraphics->AttachControl(new IKnobRotaterControl(this, 400, 100, kRelease, &knobBitmap));
@@ -71,15 +81,16 @@ void Synthesis::ProcessDoubleReplacing(double** inputs, double** outputs, int nF
 	double* outL = outputs[0];
 	double* outR = outputs[1];
 
-	double attenuation = 0.25118864315; //required to get -12dB on one oscillator
-
-	for (int i = 0; i < nFrames; ++i){
+	for (int i = 0; i < nFrames; ++i) {
 		midiQ.setOscillatorParams(voices, i);
 		outL[i] = outR[i] = 0.0;
-		for (Oscillator &osc : voices) {
-			outL[i] += osc.generate()*attenuation;
-			outR[i] = outL[i];
+		for (int j = 0; j < 127; ++j) {
+			if (!voices[j].isMuted) {
+				outL[i] += voices[j].generate();
+			}			
 		}
+		outL[i] *= attenuationFactor;
+		outR[i] = outL[i];
 	}
 	midiQ.Flush(nFrames);
 
@@ -123,6 +134,8 @@ void Synthesis::OnParamChange(int paramIdx)
 		case (kRelease):
 			Oscillator::setEnvelopeParams(RELEASE, GetParam(paramIdx)->Value());
 			break;
+		case(kWaveform):
+			Oscillator::setWaveShape(static_cast<WAVE_SHAPE>(GetParam(kWaveform)->Int()));
 		default:
 			break;
   }	

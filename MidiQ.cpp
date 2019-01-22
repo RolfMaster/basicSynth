@@ -40,8 +40,11 @@ void MidiQ::setOscillatorParams(Oscillator osc[], int offset)
 		if (status == IMidiMsg::kNoteOn) {
 			osc[note].setMuted(false);
 			osc[note].setFrequency(440 * std::pow(2.0, ((midiMsg->NoteNumber() - 69) / 12.0)));
+			osc[note].currentNote = midiMsg->NoteNumber();
 
-			if (midiMsg->Velocity() == 0) osc[note].isMuted = true;
+			if (midiMsg->Velocity() == 0) {
+				osc[note].isMuted = true;
+			}
 			else osc[note].setVelocity(midiMsg->Velocity() / 127.0);
 		}
 		/*

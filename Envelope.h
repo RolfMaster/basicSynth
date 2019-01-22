@@ -17,6 +17,7 @@ public:
 
 	void setCurrentStage(STAGE);
 	STAGE getCurrentStage();
+	STAGE currentStage;
 
 	void noteEvent(IMidiMsg::EStatusMsg statusMsg);
 
@@ -29,7 +30,7 @@ private:
 	static double release;
 	static bool legato;
 
-	STAGE currentStage;
+	
 	void nextStage();
 	double position = 0.0;
 	double lastValue;

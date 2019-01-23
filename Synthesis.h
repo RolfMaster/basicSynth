@@ -23,6 +23,7 @@ private:
   std::unordered_set<int> activeVoices;
   Oscillator voices[128];
   const double attenuationFactor = std::pow(10.0, -0.6); //required to get a single oscillator to -12dB
+  LFO mLFO;
 };
 
 #endif
